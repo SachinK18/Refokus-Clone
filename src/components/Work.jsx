@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 
 function Work() {
     const [images, setImages] = useState([
@@ -38,19 +39,53 @@ function Work() {
             left: "55%",
                 isActive: false,
         },
-      ]);
+    ]);
+
+
+    const { scrollYProgress } = useScroll();
+    scrollYProgress.on("change", (data) => {
+    
+    function imagesShow(arr) {
+        setImages((prev) => prev.map((item, index) =>
+            arr.indexOf(index) === -1 ? { ...item, isActive: false } : { ...item, isActive: true }));}
+        switch (
+            Math.floor(data * 100)) {
+                case 0:
+                    imagesShow([]);
+                    break;
+                case 1:
+                    imagesShow([0]);
+                    break;
+                case 2:
+                    imagesShow([0, 1]);
+                    break;
+                case 3:
+                    imagesShow([0, 1, 2]);
+                    break;
+                case 4:
+                    imagesShow([0, 1, 2, 3]);
+                    break;
+                case 6:
+                    imagesShow([0, 1, 2, 3, 4]);
+                    break;
+                case 8:
+                    imagesShow([0, 1, 2, 3, 4, 5]);
+                    break;
+                }
+            });
+
     return (
-        <div className="w-full mt-10">
-            <div className="relative max-w-screen-xl mx-auto text-center ">
-                <h1 className="text-[40vw] leading-none font-medium select-none">work</h1>
-                <div className="absolute top-0 w-full h-full">
-                    {images.map((elem, index) => 
-                        elem.isActive && (<img key={index} className="absolute w-60 rounded-lg -translate-x-[50%] -translate-y-[50%]" 
-                        style={{ top: elem.top, left: elem.left }} src={elem.url} alt="work_images"/>))}
-                </div>
+    <div className="w-full mt-10">
+        <div className="relative max-w-screen-xl mx-auto text-center ">
+            <h1 className="text-[40vw] leading-none font-medium select-none">work</h1>
+            <div className="absolute top-0 w-full h-full">
+                {images.map((elem, index) =>
+                elem.isActive && (
+                <img key={index} className="absolute w-60 rounded-lg -translate-x-[50%] -translate-y-[50%]" style={{ top: elem.top, left: elem.left }} src={elem.url} alt="work_images"/>))}
             </div>
         </div>
-    )
+    </div>
+    );
 }
 
-export default Work
+export default Work;
